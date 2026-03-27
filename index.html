@@ -3,11 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <title>Carnet</title>
-</head>
-<body style="font-family: Arial; text-align:center; background:#f4f4f4;">
 
-<h2>Carnet Institucional</h2>
-<div id="contenedor"></div>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #f0f0f0;
+      text-align: center;
+    }
+
+    .header img {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .footer img {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .contenedor {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .card {
+      background: white;
+      width: 320px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      padding: 20px;
+    }
+
+    .nombre {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .dato {
+      margin: 8px 0;
+    }
+
+    .activo {
+      color: green;
+      font-weight: bold;
+    }
+
+    .inactivo {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 🔝 ENCABEZADO CON IMAGEN -->
+<div class="header">
+  <img src="header.png" alt="encabezado">
+</div>
+
+<!-- 📇 CONTENIDO -->
+<div class="contenedor">
+  <div id="contenido"></div>
+</div>
+
+<!-- 🔻 PIE CON IMAGEN -->
+<div class="footer">
+  <img src="footer.png" alt="pie">
+</div>
 
 <script>
 const url = "https://opensheet.elk.sh/1_o7wwmT3T9LA4CISZ6fhOiuaq_QfFljKzjHTwDkrKE0/Hoja1";
@@ -19,26 +84,26 @@ fetch(url)
   .then(res => res.json())
   .then(data => {
 
-    const contenedor = document.getElementById("contenedor");
+    const contenedor = document.getElementById("contenido");
 
-    // 🔥 Buscar sin importar espacios
     const persona = data.find(est => 
       est.CODIGO && est.CODIGO.trim() == codigoURL
     );
 
     if (!persona) {
-      contenedor.innerHTML = "<p>No encontrado (revisa el código)</p>";
+      contenedor.innerHTML = "<p>No encontrado</p>";
       return;
     }
 
+    const estadoClase = persona.ESTADO === "ACTIVO" ? "activo" : "inactivo";
     const etiquetaCurso = persona.TIPO === "ESTUDIANTE" ? "Curso" : "Cargo";
 
     contenedor.innerHTML = `
-      <div style="background:white; padding:20px; margin:20px auto; width:300px; border-radius:10px;">
-        <h3>${persona.NOMBRE}</h3>
-        <p><strong>${etiquetaCurso}:</strong> ${persona.CURSO}</p>
-        <p>${persona.TIPO}</p>
-        <p>${persona.ESTADO}</p>
+      <div class="card">
+        <div class="nombre">${persona.NOMBRE}</div>
+        <div class="dato"><strong>${etiquetaCurso}:</strong> ${persona.CURSO}</div>
+        <div class="dato">${persona.TIPO}</div>
+        <div class="dato ${estadoClase}">${persona.ESTADO}</div>
       </div>
     `;
   });
