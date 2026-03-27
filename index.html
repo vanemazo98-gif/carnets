@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carnet</title>
+</head>
+<body style="font-family: Arial; text-align:center; background:#f4f4f4;">
+
+<h2>Carnet Institucional</h2>
+<div id="contenedor"></div>
+
+<script>
+const url = "https://opensheet.elk.sh/1_o7wwmT3T9LA4CISZ6fhOiuaq_QfFljKzjHTwDkrKE0/Hoja1";
+
+const params = new URLSearchParams(window.location.search);
+const codigoURL = params.get("codigo");
+
+fetch(url)
+  .then(res => res.json())
+  .then(data => {
+
+    const contenedor = document.getElementById("contenedor");
+
+    // 🔥 Buscar sin importar espacios
+    const persona = data.find(est => 
+      est.CODIGO && est.CODIGO.trim() == codigoURL
+    );
+
+    if (!persona) {
+      contenedor.innerHTML = "<p>No encontrado (revisa el código)</p>";
+      return;
+    }
+
+    const etiquetaCurso = persona.TIPO === "ESTUDIANTE" ? "Curso" : "Cargo";
+
+    contenedor.innerHTML = `
+      <div style="background:white; padding:20px; margin:20px auto; width:300px; border-radius:10px;">
+        <h3>${persona.NOMBRE}</h3>
+        <p><strong>${etiquetaCurso}:</strong> ${persona.CURSO}</p>
+        <p>${persona.TIPO}</p>
+        <p>${persona.ESTADO}</p>
+      </div>
+    `;
+  });
+</script>
+
+</body>
+</html>
